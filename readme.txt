@@ -15,6 +15,8 @@ Looking for admin-only editable fields? Now you can make BuddyPress XProfile fie
 
 *) As BuddyPress does not provide any hooks to completely replace field inputs for plain field values, we'll have to do it this way :(
 
+Requires at least BP 2.1.
+
 == Installation ==
 
 If you download BP XProfile Field Read Only manually, make sure it is uploaded to "/wp-content/plugins/bp-xprofile-field-read-only/".
