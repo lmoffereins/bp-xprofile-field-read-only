@@ -334,7 +334,7 @@ final class BP_XProfile_Field_Read_Only {
 		if ( $this->is_field_read_only( bp_get_the_profile_field_id() ) && ! current_user_can( 'bp_moderate' ) ) {
 			$new_html = $html;
 
-			// Set checkbox/radio to disabled. See http://www.faqs.org/docs/htmltut/forms/_INPUT_DISABLED.html
+			// Make checkbox/radio 'disabled'. See http://www.faqs.org/docs/htmltut/forms/_INPUT_DISABLED.html
 			$html = str_replace( 'type="checkbox" ', 'type="checkbox" disabled="disabled" ', $html );
 			$html = str_replace( 'type="radio" ',    'type="radio" disabled="disabled" ',    $html );
 

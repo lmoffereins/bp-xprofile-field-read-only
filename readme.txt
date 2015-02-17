@@ -11,7 +11,9 @@ Make BuddyPress XProfile fields readonly for non-admins
 
 == Description ==
 
-Long description of your plugin.
+Looking for admin-only editable fields? Now you can make BuddyPress XProfile field inputs* readonly (text/number/url) or disabled (date/multi/select/radio/checkbox) for all non-admins. This plugin comes with filters to support custom field types.
+
+*) As BuddyPress does not provide any hooks to completely replace field inputs for plain field values, we'll have to do it this way :(
 
 == Installation ==
 
