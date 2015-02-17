@@ -120,9 +120,9 @@ final class BP_XProfile_Field_Read_Only {
 		add_action( 'xprofile_admin_field_name_legend', array( $this, 'field_name_legend'     ) );
 
 		// Filter field attributes
-		add_filter( 'bp_xprofile_field_edit_html_elements',      array( $this, 'handle_element_attrs' ) );
-		add_filter( 'bp_get_the_profile_field_options_checkbox', array( $this, 'handle_input_markup'  ) );
-		add_filter( 'bp_get_the_profile_field_options_radio',    array( $this, 'handle_input_markup'  ) );
+		add_filter( 'bp_xprofile_field_edit_html_elements',      array( $this, 'handle_element_attrs' ), 10, 2 );
+		add_filter( 'bp_get_the_profile_field_options_checkbox', array( $this, 'handle_input_markup'  ), 10, 5 );
+		add_filter( 'bp_get_the_profile_field_options_radio',    array( $this, 'handle_input_markup'  ), 10, 5 );
 	}
 
 	/** Plugin **********************************************************/
@@ -274,7 +274,41 @@ final class BP_XProfile_Field_Read_Only {
 
 		// Add readonly attribute when field is read-only. Not for admins
 		if ( $this->is_field_read_only( bp_get_the_profile_field_id() ) && ! current_user_can( 'bp_moderate' ) ) {
-			$attrs['readonly'] = 'readonly';
+
+			// Check the field's class name
+			switch ( $class_name ) {
+
+				// Make <input> and <textarea> 'readonly'
+				case 'BP_XProfile_Field_Type_Textarea' :
+				case 'BP_XProfile_Field_Type_Textbox' :
+				case 'BP_XProfile_Field_Type_Number' :
+				case 'BP_XProfile_Field_Type_URL' :
+					$attrs['readonly'] = 'readonly';
+					break;
+
+				// Checkboxes and Radios are filtered elsewhere
+				case 'BP_XProfile_Field_Type_Checkbox' :
+				case 'BP_XProfile_Field_Type_Radiobutton' :
+					break;
+
+				// Set <select> elements to 'disabled', for they cannot be set to 'readonly'
+				case 'BP_XProfile_Field_Type_Datebox' :
+				case 'BP_XProfile_Field_Type_Multiselectbox' :
+				case 'BP_XProfile_Field_Type_Selectbox' :
+					$attrs['disabled'] = 'disabled';
+					break;
+
+				default :
+
+					// Filter for 'readonly' field class
+					if ( apply_filters( 'bp_xprofile_field_readonly_class', false, $class_name ) ) {
+						$attrs['readonly'] = 'readonly';
+
+					// Better safe than sorry: default to 'disabled'
+					} else {
+						$attrs['disabled'] = 'disabled';
+					}
+			}
 		}
 
 		return $attrs;
@@ -294,11 +328,20 @@ final class BP_XProfile_Field_Read_Only {
 	 * @param int $index Option index
 	 * @return string Input HTML element
 	 */
-	public function handle_input_markup( $html, $option, $field_obj_id, $selected, $index ) {
+	public function handle_input_markup( $html, $option = null, $field_obj_id = null, $selected = false, $index = 0 ) {
 
 		// Add readonly attribute when field is read-only. Not for admins
-		if ( $this->is_field_read_only( $field_obj_id ) && ! current_user_can( 'bp_moderate' ) ) {
-			$html = str_replace( '<input ', '<input readonly="readonly" ', $html );
+		if ( $this->is_field_read_only( bp_get_the_profile_field_id() ) && ! current_user_can( 'bp_moderate' ) ) {
+			$new_html = $html;
+
+			// Set checkbox/radio to disabled. See http://www.faqs.org/docs/htmltut/forms/_INPUT_DISABLED.html
+			$html = str_replace( 'type="checkbox" ', 'type="checkbox" disabled="disabled" ', $html );
+			$html = str_replace( 'type="radio" ',    'type="radio" disabled="disabled" ',    $html );
+
+			// Nothing changed: this was not a checkbox or radio
+			if ( $new_html == $html ) {
+				$html = str_replace( '<input ', '<input readonly="readonly" ', $html );
+			}
 		}
 
 		return $html;
