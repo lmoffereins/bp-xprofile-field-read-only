@@ -275,6 +275,9 @@ final class BP_XProfile_Field_Read_Only {
 			return; ?>
 
 		<style>
+			.js #submitdiv h3 {
+				border-bottom: 1px solid #eee;
+			}
 			#major-publishing-actions .misc-pub-section {
 				padding: 6px 0 8px;
 			}
@@ -283,10 +286,6 @@ final class BP_XProfile_Field_Read_Only {
 		<script>
 			jQuery(document).ready( function( $ ) {
 				$( '#submitdiv' )
-					// Add styling class 'hndle' to metabox title
-					.find( 'h3' )
-						.addClass( 'hndle' )
-						.end()
 					// Move .misc-pub-sections outside #major-publishing-actions
 					.find( '#major-publishing-actions .misc-pub-section' )
 						.insertBefore( '#submitdiv #major-publishing-actions' )
