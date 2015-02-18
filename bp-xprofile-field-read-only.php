@@ -118,6 +118,7 @@ final class BP_XProfile_Field_Read_Only {
 		add_action( 'xprofile_field_submitbox_start',   array( $this, 'field_display_setting' ) );
 		add_action( 'xprofile_field_after_save',        array( $this, 'field_save_setting'    ) );
 		add_action( 'xprofile_admin_field_name_legend', array( $this, 'field_name_legend'     ) );
+		add_action( 'bp_admin_head',                    array( $this, 'admin_scripts'         ) );
 
 		// Not on the registration page
 		if ( ! bp_is_register_page() ) {
@@ -204,13 +205,13 @@ final class BP_XProfile_Field_Read_Only {
 		// Query args for user groups from the parent field group
 		$enabled = bp_xprofile_get_meta( $field->id, 'field', $this->main_setting ); ?>
 
-		<div id="readonly">
-			<label>
-				<input name="<?php echo $this->main_setting; ?>" type="checkbox" value="1" <?php checked( $enabled ); ?>/>
-				<?php _e( 'Read Only', 'bp-xprofile-field-read-only' ); ?>
-			</label>
-
+		<div class="misc-pub-section misc-pub-readonly hide-if-js">
 			<?php wp_nonce_field( 'readonly', '_wpnonce_readonly' ); ?>
+
+			<label>
+				<input id="readonly" name="<?php echo $this->main_setting; ?>" type="checkbox" value="1" <?php checked( $enabled ); ?>/>
+				<?php _e( 'Make field read-only for non-admins', 'bp-xprofile-field-read-only' ); ?>
+			</label>
 		</div>
 
 		<?php
@@ -258,6 +259,66 @@ final class BP_XProfile_Field_Read_Only {
 
 		// Display read only legend
 		echo '<span class="readonly">' . __( '(Read Only)', 'bp-xprofile-field-read-only' ) . '</span>';
+	}
+
+	/**
+	 * Output specific metabox styles for the xprofile admin
+	 *
+	 * @since 1.0.1
+	 *
+	 * @uses BP_XProfile_Field_Read_Only::is_xprofile_admin()
+	 */
+	public function admin_scripts() {
+
+		// Bail when this is not an XProfile admin page
+		if ( ! $this->is_xprofile_admin() )
+			return; ?>
+
+		<style>
+			#major-publishing-actions .misc-pub-section {
+				padding: 6px 0 8px;
+			}
+		</style>
+
+		<script>
+			jQuery(document).ready( function( $ ) {
+				$( '#submitdiv' )
+					// Add styling class 'hndle' to metabox title
+					.find( 'h3' )
+						.addClass( 'hndle' )
+						.end()
+					// Move .misc-pub-sections outside #major-publishing-actions
+					.find( '#major-publishing-actions .misc-pub-section' )
+						.insertBefore( '#submitdiv #major-publishing-actions' )
+						.show();
+			});
+		</script>
+
+		<?php
+	}
+
+	/**
+	 * Return whether we are on the XProfile admin pages
+	 *
+	 * @since 1.0.1
+	 *
+	 * @uses get_current_screen()
+	 * 
+	 * @return bool This is an XProfile admin page
+	 */
+	public function is_xprofile_admin() {
+
+		// Bail when not in the admin
+		if ( ! is_admin() )
+			return false;
+
+		// Define expected screen id
+		$screen_id = 'users_page_bp-profile-setup';
+		if ( is_network_admin() ) {
+			$screen_id .= '-network';
+		}
+
+		return $screen_id === get_current_screen()->id;
 	}
 
 	/** Filters *********************************************************/
