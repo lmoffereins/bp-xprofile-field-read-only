@@ -25,5 +25,10 @@ Activate BP XProfile Field Read Only in the "Plugins" admin panel using the "Act
 
 == Changelog ==
 
+= 1.0.1 =
+* Fixed read-only field inputs on registration page
+* Improved styling of the admin metabox setting
+* Added Dutch translation
+
 = 1.0.0 =
 * Initial release
