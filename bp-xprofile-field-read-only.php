@@ -119,10 +119,14 @@ final class BP_XProfile_Field_Read_Only {
 		add_action( 'xprofile_field_after_save',        array( $this, 'field_save_setting'    ) );
 		add_action( 'xprofile_admin_field_name_legend', array( $this, 'field_name_legend'     ) );
 
-		// Filter field attributes
-		add_filter( 'bp_xprofile_field_edit_html_elements',      array( $this, 'handle_element_attrs' ), 10, 2 );
-		add_filter( 'bp_get_the_profile_field_options_checkbox', array( $this, 'handle_input_markup'  ), 10, 5 );
-		add_filter( 'bp_get_the_profile_field_options_radio',    array( $this, 'handle_input_markup'  ), 10, 5 );
+		// Not on the registration page
+		if ( ! bp_is_register_page() ) {
+
+			// Filter field attributes
+			add_filter( 'bp_xprofile_field_edit_html_elements',      array( $this, 'handle_element_attrs' ), 10, 2 );
+			add_filter( 'bp_get_the_profile_field_options_checkbox', array( $this, 'handle_input_markup'  ), 10, 5 );
+			add_filter( 'bp_get_the_profile_field_options_radio',    array( $this, 'handle_input_markup'  ), 10, 5 );
+		}
 	}
 
 	/** Plugin **********************************************************/
