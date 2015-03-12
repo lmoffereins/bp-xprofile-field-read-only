@@ -174,14 +174,29 @@ final class BP_XProfile_Field_Read_Only {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @uses bp_get_the_profile_field_id()
 	 * @uses bp_xprofile_get_meta()
 	 * @uses apply_filters() Calls 'bp_xprofile_is_field_read_only'
 	 * 
-	 * @param int $field_id Field ID
+	 * @param int|object $field_id Optional. Field ID or field object
 	 * @return bool Field is marked read-only
 	 */
-	public function is_field_read_only( $field_id ) {
-		return (bool) apply_filters( 'bp_xprofile_is_field_read_only', bp_xprofile_get_meta( $field_id, 'field', $this->main_setting ), $field_id );
+	public function is_field_read_only( $field_id = 0 ) {
+
+		// Get ID from field object
+		if ( is_object( $field ) ) {
+			$field_id = $field->id;
+		}
+
+		// Default to current profile field
+		if ( empty( $field_id ) ) {
+			$field_id = bp_get_the_profile_field_id();
+		}
+
+		// Get the field readonly setting
+		$readonly = (bool) bp_xprofile_get_meta( $field_id, 'field', $this->main_setting )
+
+		return (bool) apply_filters( 'bp_xprofile_is_field_read_only', $readonly, $field_id );
 	}
 
 	/**
@@ -202,7 +217,7 @@ final class BP_XProfile_Field_Read_Only {
 		if ( 1 == $field->id )
 			return;
 
-		// Get the readonly field setting
+		// Get the field readonly setting
 		$enabled = (bool) bp_xprofile_get_meta( $field->id, 'field', $this->main_setting ); ?>
 
 		<div class="misc-pub-section misc-pub-readonly hide-if-js">
@@ -328,7 +343,7 @@ final class BP_XProfile_Field_Read_Only {
 	 * @since 1.0.0
 	 *
 	 * @uses BP_XProfile_Field_Read_Only::is_field_read_only()
-	 * @uses bp_get_the_profile_field_id()
+	 * @uses apply_filters() Calls 'bp_xprofile_field_readonly_class'
 	 * 
 	 * @param array $attrs HTML attributes
 	 * @param string $class_name Class name of current field type
@@ -337,7 +352,7 @@ final class BP_XProfile_Field_Read_Only {
 	public function handle_element_attrs( $attrs, $class_name ) {
 
 		// Add readonly attribute when field is read-only. Not for admins
-		if ( $this->is_field_read_only( bp_get_the_profile_field_id() ) && ! current_user_can( 'bp_moderate' ) ) {
+		if ( $this->is_field_read_only() && ! current_user_can( 'bp_moderate' ) ) {
 
 			// Check the field's class name
 			switch ( $class_name ) {
@@ -395,15 +410,15 @@ final class BP_XProfile_Field_Read_Only {
 	public function handle_input_markup( $html, $option = null, $field_obj_id = null, $selected = false, $index = 0 ) {
 
 		// Add readonly attribute when field is read-only. Not for admins
-		if ( $this->is_field_read_only( bp_get_the_profile_field_id() ) && ! current_user_can( 'bp_moderate' ) ) {
-			$new_html = $html;
+		if ( $this->is_field_read_only() && ! current_user_can( 'bp_moderate' ) ) {
+			$_html = $html;
 
 			// Make checkbox/radio 'disabled'. See http://www.faqs.org/docs/htmltut/forms/_INPUT_DISABLED.html
 			$html = str_replace( 'type="checkbox" ', 'type="checkbox" disabled="disabled" ', $html );
 			$html = str_replace( 'type="radio" ',    'type="radio" disabled="disabled" ',    $html );
 
 			// Nothing changed: this was not a checkbox or radio
-			if ( $new_html == $html ) {
+			if ( $_html === $html ) {
 				$html = str_replace( '<input ', '<input readonly="readonly" ', $html );
 			}
 		}
