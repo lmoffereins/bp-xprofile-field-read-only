@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The BP XProfile Field Read Only Plugin
+ * The BuddyPress XProfile Field Read Only Plugin
  * 
  * @package BP XProfile Field Read Only
  * @subpackage Main
@@ -202,8 +202,8 @@ final class BP_XProfile_Field_Read_Only {
 		if ( 1 == $field->id )
 			return;
 
-		// Query args for user groups from the parent field group
-		$enabled = bp_xprofile_get_meta( $field->id, 'field', $this->main_setting ); ?>
+		// Get the readonly field setting
+		$enabled = (bool) bp_xprofile_get_meta( $field->id, 'field', $this->main_setting ); ?>
 
 		<div class="misc-pub-section misc-pub-readonly hide-if-js">
 			<?php wp_nonce_field( 'readonly', '_wpnonce_readonly' ); ?>
