@@ -194,7 +194,7 @@ final class BP_XProfile_Field_Read_Only {
 		}
 
 		// Get the field readonly setting
-		$readonly = (bool) bp_xprofile_get_meta( $field_id, 'field', $this->main_setting )
+		$readonly = (bool) bp_xprofile_get_meta( $field_id, 'field', $this->main_setting );
 
 		return (bool) apply_filters( 'bp_xprofile_is_field_read_only', $readonly, $field_id );
 	}
