@@ -184,8 +184,8 @@ final class BP_XProfile_Field_Read_Only {
 	public function is_field_read_only( $field_id = 0 ) {
 
 		// Get ID from field object
-		if ( is_object( $field ) ) {
-			$field_id = $field->id;
+		if ( is_object( $field_id ) ) {
+			$field_id = $field_id->id;
 		}
 
 		// Default to current profile field
