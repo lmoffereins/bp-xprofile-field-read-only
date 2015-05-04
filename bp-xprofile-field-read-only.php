@@ -104,6 +104,9 @@ final class BP_XProfile_Field_Read_Only {
 	 * Setup default actions and filters
 	 *
 	 * @since 1.0.0
+	 *
+	 * @uses bp_is_active()
+	 * @uses bp_is_register_page()
 	 */
 	private function setup_actions() {
 
@@ -124,9 +127,9 @@ final class BP_XProfile_Field_Read_Only {
 		if ( ! bp_is_register_page() ) {
 
 			// Filter field attributes
-			add_filter( 'bp_xprofile_field_edit_html_elements',      array( $this, 'handle_element_attrs' ), 10, 2 );
-			add_filter( 'bp_get_the_profile_field_options_checkbox', array( $this, 'handle_input_markup'  ), 10, 5 );
-			add_filter( 'bp_get_the_profile_field_options_radio',    array( $this, 'handle_input_markup'  ), 10, 5 );
+			add_filter( 'bp_xprofile_field_edit_html_elements',      array( $this, 'filter_element_attrs' ), 10, 2 );
+			add_filter( 'bp_get_the_profile_field_options_checkbox', array( $this, 'filter_input_markup'  ), 10, 5 );
+			add_filter( 'bp_get_the_profile_field_options_radio',    array( $this, 'filter_input_markup'  ), 10, 5 );
 		}
 	}
 
@@ -225,7 +228,7 @@ final class BP_XProfile_Field_Read_Only {
 
 			<label>
 				<input id="readonly" name="<?php echo $this->main_setting; ?>" type="checkbox" value="1" <?php checked( $enabled ); ?>/>
-				<?php _e( 'Make field read-only for non-admins', 'bp-xprofile-field-read-only' ); ?>
+				<?php _e( 'Read-only for non-admins', 'bp-xprofile-field-read-only' ); ?>
 			</label>
 		</div>
 
@@ -349,7 +352,7 @@ final class BP_XProfile_Field_Read_Only {
 	 * @param string $class_name Class name of current field type
 	 * @return array HTML attributes
 	 */
-	public function handle_element_attrs( $attrs, $class_name ) {
+	public function filter_element_attrs( $attrs, $class_name ) {
 
 		// Add readonly attribute when field is read-only. Not for admins
 		if ( $this->is_field_read_only() && ! current_user_can( 'bp_moderate' ) ) {
@@ -407,15 +410,15 @@ final class BP_XProfile_Field_Read_Only {
 	 * @param int $index Option index
 	 * @return string Input HTML element
 	 */
-	public function handle_input_markup( $html, $option = null, $field_obj_id = null, $selected = false, $index = 0 ) {
+	public function filter_input_markup( $html, $option = null, $field_obj_id = null, $selected = false, $index = 0 ) {
 
 		// Add readonly attribute when field is read-only. Not for admins
 		if ( $this->is_field_read_only() && ! current_user_can( 'bp_moderate' ) ) {
 			$_html = $html;
 
-			// Make checkbox/radio 'disabled'. See http://www.faqs.org/docs/htmltut/forms/_INPUT_DISABLED.html
-			$html = str_replace( 'type="checkbox" ', 'type="checkbox" disabled="disabled" ', $html );
-			$html = str_replace( 'type="radio" ',    'type="radio" disabled="disabled" ',    $html );
+			// Disable checkbox/radio. See http://www.faqs.org/docs/htmltut/forms/_INPUT_DISABLED.html
+			$html = str_replace( ' type="checkbox"', ' type="checkbox" disabled="disabled"', $html );
+			$html = str_replace( ' type="radio"',    ' type="radio" disabled="disabled"',    $html );
 
 			// Nothing changed: this was not a checkbox or radio
 			if ( $_html === $html ) {
