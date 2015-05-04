@@ -11,7 +11,7 @@
  * Plugin Name:       BP XProfile Field Read Only
  * Description:       Make BuddyPress XProfile fields readonly for non-admins
  * Plugin URI:        https://github.com/lmoffereins/bp-xprofile-field-read-only/
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            Laurens Offereins
  * Author URI:        https://github.com/lmoffereins/
  * Text Domain:       bp-xprofile-field-read-only
@@ -77,7 +77,7 @@ final class BP_XProfile_Field_Read_Only {
 
 		/** Versions **********************************************************/
 		
-		$this->version      = '1.0.1';
+		$this->version      = '1.0.2';
 		
 		/** Paths *************************************************************/
 		
