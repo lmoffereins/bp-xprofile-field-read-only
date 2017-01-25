@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BP XProfile Field Read Only v1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-25 13:01+0000\n"
-"PO-Revision-Date: 2017-01-25 13:03+0000\n"
+"POT-Creation-Date: 2017-01-25 14:30+0000\n"
+"PO-Revision-Date: 2017-01-25 14:30+0000\n"
 "Last-Translator: laurens <lmoffereins@gmail.com>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,10 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes\n"
 "Language: nl-NL"
+
+#: bp-xprofile-field-read-only.php:212
+msgid "Read-only"
+msgstr "Alleen-lezen"
 
 #: bp-xprofile-field-read-only.php:214
 msgid ""
@@ -43,6 +47,10 @@ msgstr "Uitgeschakeld"
 msgid "Enabled"
 msgstr "Ingeschakeld"
 
+#: bp-xprofile-field-read-only.php:270
+msgid "(Read Only)"
+msgstr "(Alleen-Lezen)"
+
 #. translators: plugin header field 'Name'
 msgid "BP XProfile Field Read Only"
 msgstr "BP XProfile Field Read Only"
@@ -62,7 +70,3 @@ msgstr "Laurens Offereins"
 #. translators: plugin header field 'AuthorURI'
 msgid "https://github.com/lmoffereins/"
 msgstr "https://github.com/lmoffereins/"
-
-#: bp-xprofile-field-read-only.php:270
-msgid "(Read Only)"
-msgstr "(Alleen-Lezen)"

@@ -209,7 +209,7 @@ final class BP_XProfile_Field_Read_Only {
 		?>
 
 		<div id="field-activity-div" class="postbox">
-			<h2><?php _e( 'Read-only', 'buddypress' ); ?></h2>
+			<h2><?php _e( 'Read-only', 'bp-xprofile-field-read-only' ); ?></h2>
 			<div class="inside">
 				<p class="description"><?php esc_html_e( 'For non-administrators, disable field editing by removing this field from edit contexts.', 'bp-xprofile-field-read-only' ); ?></p>
 
