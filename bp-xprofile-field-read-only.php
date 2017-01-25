@@ -112,7 +112,7 @@ final class BP_XProfile_Field_Read_Only {
 			return;
 
 		// Plugin
-		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
+		add_action( 'bp_init', array( $this, 'load_textdomain' ), 11 );
 
 		// Admin
 		add_action( 'xprofile_field_after_sidebarbox',  array( $this, 'admin_add_metabox'  ) );
