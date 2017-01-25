@@ -2,67 +2,67 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BP XProfile Field Read Only v1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-02-18 14:34:09+0000\n"
+"POT-Creation-Date: 2017-01-25 13:01+0000\n"
+"PO-Revision-Date: 2017-01-25 13:03+0000\n"
 "Last-Translator: laurens <lmoffereins@gmail.com>\n"
-"Language-Team: \n"
+"Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: CSL v1.x\n"
+"Plural-Forms: nplurals=2; plural=n != 1\n"
+"X-Generator: Loco - https://localise.biz/\n"
 "X-Poedit-Language: Dutch\n"
 "X-Poedit-Country: NETHERLANDS\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
 "X-Poedit-Basepath: ../\n"
 "X-Poedit-Bookmarks: \n"
 "X-Poedit-SearchPath-0: .\n"
-"X-Textdomain-Support: yes"
+"X-Textdomain-Support: yes\n"
+"Language: nl-NL"
+
+#: bp-xprofile-field-read-only.php:214
+msgid ""
+"For non-administrators, disable field editing by removing this field from "
+"edit contexts."
+msgstr ""
+"Schakel de bewerking van dit veld uit voor niet-beheerders door het te "
+"verwijderen in de bewerkingscontext."
+
+#. accessibility text
+#: bp-xprofile-field-read-only.php:219
+msgid "Read-only status for this field"
+msgstr "Alleen-lezen status voor dit veld"
+
+#: bp-xprofile-field-read-only.php:222
+msgid "Disabled"
+msgstr "Uitgeschakeld"
+
+#: bp-xprofile-field-read-only.php:223
+msgid "Enabled"
+msgstr "Ingeschakeld"
 
 #. translators: plugin header field 'Name'
-#: bp-xprofile-field-read-only.php:0
-#@ bp-xprofile-field-read-only
 msgid "BP XProfile Field Read Only"
-msgstr ""
+msgstr "BP XProfile Field Read Only"
+
+#. Description of the plugin
+msgid "Make BuddyPress XProfile fields uneditable for non-admins"
+msgstr "Maak BuddyPress profielvelden onbewerkbaar voor niet-beheerders"
 
 #. translators: plugin header field 'PluginURI'
-#: bp-xprofile-field-read-only.php:0
-#@ bp-xprofile-field-read-only
 msgid "https://github.com/lmoffereins/bp-xprofile-field-read-only/"
-msgstr ""
-
-#. translators: plugin header field 'Description'
-#: bp-xprofile-field-read-only.php:0
-#@ bp-xprofile-field-read-only
-msgid "Make BuddyPress XProfile fields readonly for non-admins"
-msgstr "Maak BuddyPress profielvelden alleen-lezen voor niet-admins"
+msgstr "https://github.com/lmoffereins/bp-xprofile-field-read-only/"
 
 #. translators: plugin header field 'Author'
-#: bp-xprofile-field-read-only.php:0
-#@ bp-xprofile-field-read-only
 msgid "Laurens Offereins"
-msgstr ""
+msgstr "Laurens Offereins"
 
 #. translators: plugin header field 'AuthorURI'
-#: bp-xprofile-field-read-only.php:0
-#@ bp-xprofile-field-read-only
 msgid "https://github.com/lmoffereins/"
-msgstr ""
+msgstr "https://github.com/lmoffereins/"
 
-#. translators: plugin header field 'Version'
-#: bp-xprofile-field-read-only.php:0
-#@ bp-xprofile-field-read-only
-msgid "1.0.0"
-msgstr ""
-
-#: bp-xprofile-field-read-only.php:213
-#@ bp-xprofile-field-read-only
-msgid "Make field read-only for non-admins"
-msgstr "Maak dit een alleen-lezen veld voor niet-admins"
-
-#: bp-xprofile-field-read-only.php:261
-#@ bp-xprofile-field-read-only
+#: bp-xprofile-field-read-only.php:270
 msgid "(Read Only)"
 msgstr "(Alleen-Lezen)"
-
