@@ -201,14 +201,11 @@ final class BP_XProfile_Field_Read_Only {
 	 * Since BP 2.1.0.
 	 *
 	 * @since 1.0.0
+	 * @since 1.0.3 Enable read-only for the primary field.
 	 *
 	 * @param BP_XProfile_Field $field Current xprofile field
 	 */
 	public function field_display_setting( $field ) {
-
-		// Ignore the primary field
-		if ( 1 == $field->id )
-			return;
 
 		// Get the field readonly setting
 		$enabled = (bool) bp_xprofile_get_meta( $field->id, 'field', $this->main_setting ); ?>
