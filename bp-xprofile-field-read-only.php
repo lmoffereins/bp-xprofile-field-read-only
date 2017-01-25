@@ -289,7 +289,10 @@ final class BP_XProfile_Field_Read_Only {
 
 		// Are we editing fields? Front or in admin
 		$editing = bp_is_user_profile_edit() || ( is_admin() && isset( $_GET['page'] ) && 'bp-profile-edit' === $_GET['page'] );
-		$no_edit = ! current_user_can( 'bp_moderate' );
+
+		// Bail when user is admin or we're not editing fields
+		if ( current_user_can( 'bp_moderate' ) || ! $editing )
+			return $groups;
 
 		// Walk profile groups
 		foreach ( $groups as $gk => $group ) {
@@ -302,7 +305,7 @@ final class BP_XProfile_Field_Read_Only {
 			foreach ( $group->fields as $fk => $field ) {
 
 				// Remove read-only field
-				if ( $editing && $no_edit && $this->is_field_read_only( $field->id ) ) {
+				if ( $this->is_field_read_only( $field->id ) ) {
 					unset( $groups[ $gk ]->fields[ $fk ] );
 
 					// Reset numeric keys
