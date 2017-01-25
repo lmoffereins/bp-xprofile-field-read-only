@@ -104,9 +104,6 @@ final class BP_XProfile_Field_Read_Only {
 	 * Setup default actions and filters
 	 *
 	 * @since 1.0.0
-	 *
-	 * @uses bp_is_active()
-	 * @uses bp_is_register_page()
 	 */
 	private function setup_actions() {
 
@@ -147,8 +144,6 @@ final class BP_XProfile_Field_Read_Only {
 	 * @since 1.0.0
 	 *
 	 * @uses apply_filters() Calls 'plugin_locale' with {@link get_locale()} value
-	 * @uses load_textdomain() To load the textdomain
-	 * @uses load_plugin_textdomain() To load the textdomain
 	 */
 	public function load_textdomain() {
 	
@@ -177,8 +172,6 @@ final class BP_XProfile_Field_Read_Only {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @uses bp_get_the_profile_field_id()
-	 * @uses bp_xprofile_get_meta()
 	 * @uses apply_filters() Calls 'bp_xprofile_is_field_read_only'
 	 * 
 	 * @param int|object $field_id Optional. Field ID or field object
@@ -209,9 +202,6 @@ final class BP_XProfile_Field_Read_Only {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @uses bp_xprofile_get_meta()
-	 * @uses wp_nonce_field()
-	 *
 	 * @param BP_XProfile_Field $field Current xprofile field
 	 */
 	public function field_display_setting( $field ) {
@@ -240,9 +230,6 @@ final class BP_XProfile_Field_Read_Only {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @uses wp_verify_nonce()
-	 * @uses bp_xprofile_update_field_meta()
-	 *
 	 * @param BP_XProfile_Field $field Saved xprofile field
 	 */
 	public function field_save_setting( $field ) {
@@ -264,8 +251,6 @@ final class BP_XProfile_Field_Read_Only {
 	 * Since BP 2.2.0.
 	 *
 	 * @since 1.0.0
-	 *
-	 * @uses BP_XProfile_Field_Read_Only::is_field_read_only()
 	 * 
 	 * @param object $field Field data
 	 */
@@ -283,8 +268,6 @@ final class BP_XProfile_Field_Read_Only {
 	 * Output specific metabox styles for the xprofile admin
 	 *
 	 * @since 1.0.1
-	 *
-	 * @uses BP_XProfile_Field_Read_Only::is_xprofile_admin()
 	 */
 	public function admin_scripts() {
 
@@ -318,8 +301,6 @@ final class BP_XProfile_Field_Read_Only {
 	 * Return whether we are on the XProfile admin pages
 	 *
 	 * @since 1.0.1
-	 *
-	 * @uses get_current_screen()
 	 * 
 	 * @return bool This is an XProfile admin page
 	 */
@@ -345,7 +326,6 @@ final class BP_XProfile_Field_Read_Only {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @uses BP_XProfile_Field_Read_Only::is_field_read_only()
 	 * @uses apply_filters() Calls 'bp_xprofile_field_readonly_class'
 	 * 
 	 * @param array $attrs HTML attributes
@@ -400,8 +380,6 @@ final class BP_XProfile_Field_Read_Only {
 	 * Filter input markup for read-only fields
 	 *
 	 * @since 1.0.0
-	 * 
-	 * @uses BP_XProfile_Field_Read_Only::is_field_read_only()
 	 * 
 	 * @param string $html Input HTML element
 	 * @param object $option Option data
