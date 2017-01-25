@@ -123,9 +123,7 @@ final class BP_XProfile_Field_Read_Only {
 		if ( ! bp_is_register_page() ) {
 
 			// Filter field attributes
-			add_filter( 'bp_xprofile_field_edit_html_elements',      array( $this, 'filter_element_attrs' ), 10, 2 );
-			add_filter( 'bp_get_the_profile_field_options_checkbox', array( $this, 'filter_input_markup'  ), 10, 5 );
-			add_filter( 'bp_get_the_profile_field_options_radio',    array( $this, 'filter_input_markup'  ), 10, 5 );
+			add_filter( 'bp_xprofile_get_groups', array( $this, 'filter_profile_groups' ), 10, 2 );
 		}
 	}
 
@@ -211,12 +209,20 @@ final class BP_XProfile_Field_Read_Only {
 		?>
 
 		<div id="field-activity-div" class="postbox">
-			<h2><?php _e( 'Read Only', 'buddypress' ); ?></h2>
+			<h2><?php _e( 'Read-only', 'buddypress' ); ?></h2>
 			<div class="inside">
-				<select id="readonly" name="<?php echo $this->main_setting; ?>">
-					<option value="0" <?php selected( $enabled, 0 ); ?>><?php esc_html_e( 'Field is editable',       'bp-xprofile-field-read-only' ); ?></option>
-					<option value="1" <?php selected( $enabled, 1 ); ?>><?php esc_html_e( 'Hide field when editing', 'bp-xprofile-field-read-only' ); ?></option>
-				</select>
+				<p class="description"><?php esc_html_e( 'For non-administrators, disable field editing by removing this field from edit contexts.', 'bp-xprofile-field-read-only' ); ?></p>
+
+				<p>
+					<label for="readonly" class="screen-reader-text"><?php
+						/* translators: accessibility text */
+						esc_html_e( 'Read-only status for this field', 'bp-xprofile-field-read-only' );
+					?></label>
+					<select id="readonly" name="<?php echo $this->main_setting; ?>">
+						<option value="0" <?php selected( $enabled, 0 ); ?>><?php esc_html_e( 'Disabled', 'bp-xprofile-field-read-only' ); ?></option>
+						<option value="1" <?php selected( $enabled, 1 ); ?>><?php esc_html_e( 'Enabled',  'bp-xprofile-field-read-only' ); ?></option>
+					</select>
+				</p>
 			</div>
 
 			<input type="hidden" name="has-read-only" value="1" />
@@ -266,6 +272,52 @@ final class BP_XProfile_Field_Read_Only {
 
 	/** Filters *********************************************************/
 
+	/**
+	 * Modify the queried profile groups' fields
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param array $groups Profile groups
+	 * @param array $args Query arguments
+	 * @return array Profile groups
+	 */
+	public function filter_profile_groups( $groups, $args ) {
+
+		// Bail when no fields were fetched
+		if ( ! isset( $args['fetch_fields'] ) || ! $args['fetch_fields'] )
+			return $groups;
+
+		// Are we editing fields? Front or in admin
+		$editing = bp_is_user_profile_edit() || ( is_admin() && isset( $_GET['page'] ) && 'bp-profile-edit' === $_GET['page'] );
+		$no_edit = ! current_user_can( 'bp_moderate' );
+
+		// Walk profile groups
+		foreach ( $groups as $gk => $group ) {
+
+			// No fields were queried
+			if ( ! isset( $group->fields ) )
+				continue;
+
+			// Walk group fields
+			foreach ( $group->fields as $fk => $field ) {
+
+				// Remove read-only field
+				if ( $editing && $no_edit && $this->is_field_read_only( $field->id ) ) {
+					unset( $groups[ $gk ]->fields[ $fk ] );
+
+					// Reset numeric keys
+					$groups[ $gk ]->fields = array_values( $groups[ $gk ]->fields );
+				}
+			}
+
+			// Remove empty group
+			if ( isset( $args['hide_empty_groups'] ) && $args['hide_empty_groups'] && empty( $group->fields ) ) {
+				unset( $groups[ $gk ] );
+			}
+		}
+
+		return $groups;
+	}
 }
 
 /**
