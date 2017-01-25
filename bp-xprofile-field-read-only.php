@@ -380,15 +380,15 @@ final class BP_XProfile_Field_Read_Only {
 	 * 
 	 * @param string $html Input HTML element
 	 * @param object $option Option data
-	 * @param int $field_obj_id Field ID
+	 * @param int $field_id Field ID
 	 * @param bool $selected Input is selected
 	 * @param int $index Option index
 	 * @return string Input HTML element
 	 */
-	public function filter_input_markup( $html, $option = null, $field_obj_id = null, $selected = false, $index = 0 ) {
+	public function filter_input_markup( $html, $option = null, $field_id = null, $selected = false, $index = 0 ) {
 
-		// Add readonly attribute when field is read-only. Not for admins
-		if ( $this->is_field_read_only() && ! current_user_can( 'bp_moderate' ) ) {
+		// Add readonly attribute when field is read-only. Only for non-admins
+		if ( $this->is_field_read_only( $field_id ) && ! current_user_can( 'bp_moderate' ) ) {
 			$_html = $html;
 
 			// Disable checkbox/radio. See http://www.faqs.org/docs/htmltut/forms/_INPUT_DISABLED.html
