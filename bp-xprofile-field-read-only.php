@@ -114,11 +114,10 @@ final class BP_XProfile_Field_Read_Only {
 		// Plugin
 		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 
-		// XProfile field meta
-		add_action( 'xprofile_field_submitbox_start',   array( $this, 'field_display_setting' ) );
-		add_action( 'xprofile_field_after_save',        array( $this, 'field_save_setting'    ) );
-		add_action( 'xprofile_admin_field_name_legend', array( $this, 'field_name_legend'     ) );
-		add_action( 'bp_admin_head',                    array( $this, 'admin_scripts'         ) );
+		// Admin
+		add_action( 'xprofile_field_after_sidebarbox',  array( $this, 'admin_add_metabox'  ) );
+		add_action( 'xprofile_fields_saved_field',      array( $this, 'admin_save_metabox' ) );
+		add_action( 'xprofile_admin_field_name_legend', array( $this, 'field_name_legend'  ) );
 
 		// Not on the registration page
 		if ( ! bp_is_register_page() ) {
@@ -195,51 +194,55 @@ final class BP_XProfile_Field_Read_Only {
 		return (bool) apply_filters( 'bp_xprofile_is_field_read_only', $readonly, $field_id );
 	}
 
+	/** Admin ***********************************************************/
+
 	/**
-	 * Output the input for the read-only setting
+	 * Display the plugin's profile field metabox
 	 *
-	 * Since BP 2.1.0.
+	 * @since 1.1.0
 	 *
-	 * @since 1.0.0
-	 * @since 1.0.3 Enable read-only for the primary field.
-	 *
-	 * @param BP_XProfile_Field $field Current xprofile field
+	 * @param BP_XProfile_Field $field
 	 */
-	public function field_display_setting( $field ) {
+	public function admin_add_metabox( $field ) {
 
-		// Get the field readonly setting
-		$enabled = (bool) bp_xprofile_get_meta( $field->id, 'field', $this->main_setting ); ?>
+		// Get the field meta
+		$enabled = (int) bp_xprofile_get_meta( $field->id, 'field', $this->main_setting );
 
-		<div class="misc-pub-section misc-pub-readonly hide-if-js">
-			<?php wp_nonce_field( 'readonly', '_wpnonce_readonly' ); ?>
+		?>
 
-			<label>
-				<input id="readonly" name="<?php echo $this->main_setting; ?>" type="checkbox" value="1" <?php checked( $enabled ); ?>/>
-				<?php _e( 'Read-only for non-admins', 'bp-xprofile-field-read-only' ); ?>
-			</label>
+		<div id="field-activity-div" class="postbox">
+			<h2><?php _e( 'Read Only', 'buddypress' ); ?></h2>
+			<div class="inside">
+				<select id="readonly" name="<?php echo $this->main_setting; ?>">
+					<option value="0" <?php selected( $enabled, 0 ); ?>><?php esc_html_e( 'Field is editable',       'bp-xprofile-field-read-only' ); ?></option>
+					<option value="1" <?php selected( $enabled, 1 ); ?>><?php esc_html_e( 'Hide field when editing', 'bp-xprofile-field-read-only' ); ?></option>
+				</select>
+			</div>
+
+			<input type="hidden" name="has-read-only" value="1" />
 		</div>
 
 		<?php
 	}
 
 	/**
-	 * Save the input for the read-only setting
+	 * Save the contents of the plugin's profile field metabox
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param BP_XProfile_Field $field Saved xprofile field
+	 * @param BP_XProfile_Field $field
 	 */
-	public function field_save_setting( $field ) {
+	public function admin_save_metabox( $field ) {
 
-		// Bail if nonce does not verify
-		if ( ! isset( $_REQUEST['_wpnonce_readonly'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce_readonly'], 'readonly' ) )
+		// Bail when the metabox was not submitted
+		if ( ! isset( $_POST['has-read-only'] ) )
 			return;
 
-		// Sanitize input
-		$enabled = isset( $_REQUEST[ $this->main_setting ] ) ? (int) $_REQUEST[ $this->main_setting ] : 0;
+		// Define meta value
+		$value = isset( $_REQUEST[ $this->main_setting ] ) ? (int) $_REQUEST[ $this->main_setting ] : 0;
 
 		// Update field meta
-		bp_xprofile_update_field_meta( $field->id, $this->main_setting, $enabled );
+		bp_xprofile_update_field_meta( $field->id, $this->main_setting, $value );
 	}
 
 	/**
@@ -261,148 +264,8 @@ final class BP_XProfile_Field_Read_Only {
 		echo '<span class="readonly">' . __( '(Read Only)', 'bp-xprofile-field-read-only' ) . '</span>';
 	}
 
-	/**
-	 * Output specific metabox styles for the xprofile admin
-	 *
-	 * @since 1.0.1
-	 */
-	public function admin_scripts() {
-
-		// Bail when this is not an XProfile admin page
-		if ( ! $this->is_xprofile_admin() )
-			return; ?>
-
-		<style>
-			.js #submitdiv h3 {
-				border-bottom: 1px solid #eee;
-			}
-			#major-publishing-actions .misc-pub-section {
-				padding: 6px 0 8px;
-			}
-		</style>
-
-		<script>
-			jQuery(document).ready( function( $ ) {
-				$( '#submitdiv' )
-					// Move .misc-pub-sections outside #major-publishing-actions
-					.find( '#major-publishing-actions .misc-pub-section' )
-						.insertBefore( '#submitdiv #major-publishing-actions' )
-						.show();
-			});
-		</script>
-
-		<?php
-	}
-
-	/**
-	 * Return whether we are on the XProfile admin pages
-	 *
-	 * @since 1.0.1
-	 * 
-	 * @return bool This is an XProfile admin page
-	 */
-	public function is_xprofile_admin() {
-
-		// Bail when not in the admin
-		if ( ! is_admin() )
-			return false;
-
-		// Define expected screen id
-		$screen_id = 'users_page_bp-profile-setup';
-		if ( is_network_admin() ) {
-			$screen_id .= '-network';
-		}
-
-		return $screen_id === get_current_screen()->id;
-	}
-
 	/** Filters *********************************************************/
 
-	/**
-	 * Filter the HTML element's attributes
-	 *
-	 * @since 1.0.0
-	 *
-	 * @uses apply_filters() Calls 'bp_xprofile_field_readonly_class'
-	 * 
-	 * @param array $attrs HTML attributes
-	 * @param string $class_name Class name of current field type
-	 * @return array HTML attributes
-	 */
-	public function filter_element_attrs( $attrs, $class_name ) {
-
-		// Add readonly attribute when field is read-only. Not for admins
-		if ( $this->is_field_read_only() && ! current_user_can( 'bp_moderate' ) ) {
-
-			// Check the field's class name
-			switch ( $class_name ) {
-
-				// Make <input> and <textarea> 'readonly'
-				case 'BP_XProfile_Field_Type_Textarea' :
-				case 'BP_XProfile_Field_Type_Textbox' :
-				case 'BP_XProfile_Field_Type_Number' :
-				case 'BP_XProfile_Field_Type_URL' :
-					$attrs['readonly'] = 'readonly';
-					break;
-
-				// Checkboxes and Radios are filtered elsewhere
-				case 'BP_XProfile_Field_Type_Checkbox' :
-				case 'BP_XProfile_Field_Type_Radiobutton' :
-					break;
-
-				// Set <select> elements to 'disabled', for they cannot be set to 'readonly'
-				case 'BP_XProfile_Field_Type_Datebox' :
-				case 'BP_XProfile_Field_Type_Multiselectbox' :
-				case 'BP_XProfile_Field_Type_Selectbox' :
-					$attrs['disabled'] = 'disabled';
-					break;
-
-				default :
-
-					// Filter for 'readonly' field class
-					if ( apply_filters( 'bp_xprofile_field_readonly_class', false, $class_name ) ) {
-						$attrs['readonly'] = 'readonly';
-
-					// Better safe than sorry: default to 'disabled'
-					} else {
-						$attrs['disabled'] = 'disabled';
-					}
-			}
-		}
-
-		return $attrs;
-	}
-
-	/**
-	 * Filter input markup for read-only fields
-	 *
-	 * @since 1.0.0
-	 * 
-	 * @param string $html Input HTML element
-	 * @param object $option Option data
-	 * @param int $field_id Field ID
-	 * @param bool $selected Input is selected
-	 * @param int $index Option index
-	 * @return string Input HTML element
-	 */
-	public function filter_input_markup( $html, $option = null, $field_id = null, $selected = false, $index = 0 ) {
-
-		// Add readonly attribute when field is read-only. Only for non-admins
-		if ( $this->is_field_read_only( $field_id ) && ! current_user_can( 'bp_moderate' ) ) {
-			$_html = $html;
-
-			// Disable checkbox/radio. See http://www.faqs.org/docs/htmltut/forms/_INPUT_DISABLED.html
-			$html = str_replace( ' type="checkbox"', ' type="checkbox" disabled="disabled"', $html );
-			$html = str_replace( ' type="radio"',    ' type="radio" disabled="disabled"',    $html );
-
-			// Nothing changed: this was not a checkbox or radio
-			if ( $_html === $html ) {
-				$html = str_replace( '<input ', '<input readonly="readonly" ', $html );
-			}
-		}
-
-		return $html;
-	}
 }
 
 /**
