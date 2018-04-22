@@ -3,41 +3,49 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-25 14:30+0000\n"
+"POT-Creation-Date: 2018-04-22 16:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
 "Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco - https://localise.biz/"
+"X-Generator: Loco https://localise.biz/"
 
-#: bp-xprofile-field-read-only.php:212
+#: bp-xprofile-field-read-only.php:214
 msgid "Read-only"
 msgstr ""
 
-#: bp-xprofile-field-read-only.php:214
+#: bp-xprofile-field-read-only.php:216
 msgid ""
 "For non-administrators, disable field editing by removing this field from "
-"edit contexts."
+"edit contexts or choose to fully hide the field from the member's profile."
 msgstr ""
 
 #. accessibility text
-#: bp-xprofile-field-read-only.php:219
+#: bp-xprofile-field-read-only.php:221
 msgid "Read-only status for this field"
 msgstr ""
 
-#: bp-xprofile-field-read-only.php:222
+#: bp-xprofile-field-read-only.php:224
 msgid "Disabled"
 msgstr ""
 
-#: bp-xprofile-field-read-only.php:223
+#: bp-xprofile-field-read-only.php:225
 msgid "Enabled"
 msgstr ""
 
-#: bp-xprofile-field-read-only.php:270
+#: bp-xprofile-field-read-only.php:226
+msgid "Admin-only"
+msgstr ""
+
+#: bp-xprofile-field-read-only.php:271
+msgid "(Admin Only)"
+msgstr ""
+
+#: bp-xprofile-field-read-only.php:272
 msgid "(Read Only)"
 msgstr ""
 
@@ -46,7 +54,7 @@ msgid "BP XProfile Field Read Only"
 msgstr ""
 
 #. Description of the plugin
-msgid "Make BuddyPress XProfile fields uneditable for non-admins"
+msgid "Make BuddyPress XProfile fields uneditable or hidden for non-admins"
 msgstr ""
 
 #. URI of the plugin
