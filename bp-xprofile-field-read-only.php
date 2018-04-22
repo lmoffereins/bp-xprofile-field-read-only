@@ -171,10 +171,11 @@ final class BP_XProfile_Field_Read_Only {
 	 *
 	 * @uses apply_filters() Calls 'bp_xprofile_is_field_read_only'
 	 * 
-	 * @param int|object $field_id Optional. Field ID or field object
+	 * @param int|object $field_id Optional. Field ID or field object. Defaults to the current field.
+	 * @param bool $admin_only Optional. Whether to require admin-only status. Defaults to false.
 	 * @return bool Field is marked read-only
 	 */
-	public function is_field_read_only( $field_id = 0 ) {
+	public function is_field_read_only( $field_id = 0, $admin_only = false ) {
 
 		// Get ID from field object
 		if ( is_object( $field_id ) ) {
@@ -187,9 +188,10 @@ final class BP_XProfile_Field_Read_Only {
 		}
 
 		// Get the field readonly setting
-		$readonly = (bool) bp_xprofile_get_meta( $field_id, 'field', $this->main_setting );
+		$readonly = bp_xprofile_get_meta( $field_id, 'field', $this->main_setting );
+		$readonly = $admin_only ? $readonly == 2 : (bool) $readonly;
 
-		return (bool) apply_filters( 'bp_xprofile_is_field_read_only', $readonly, $field_id );
+		return (bool) apply_filters( 'bp_xprofile_is_field_read_only', $readonly, $field_id, $admin_only );
 	}
 
 	/** Admin ***********************************************************/
@@ -211,7 +213,7 @@ final class BP_XProfile_Field_Read_Only {
 		<div id="field-activity-div" class="postbox">
 			<h2><?php _e( 'Read-only', 'bp-xprofile-field-read-only' ); ?></h2>
 			<div class="inside">
-				<p class="description"><?php esc_html_e( 'For non-administrators, disable field editing by removing this field from edit contexts.', 'bp-xprofile-field-read-only' ); ?></p>
+				<p class="description"><?php esc_html_e( "For non-administrators, disable field editing by removing this field from edit contexts or choose to fully hide the field from the member's profile.", 'bp-xprofile-field-read-only' ); ?></p>
 
 				<p>
 					<label for="readonly" class="screen-reader-text"><?php
@@ -219,8 +221,9 @@ final class BP_XProfile_Field_Read_Only {
 						esc_html_e( 'Read-only status for this field', 'bp-xprofile-field-read-only' );
 					?></label>
 					<select id="readonly" name="<?php echo $this->main_setting; ?>">
-						<option value="0" <?php selected( $enabled, 0 ); ?>><?php esc_html_e( 'Disabled', 'bp-xprofile-field-read-only' ); ?></option>
-						<option value="1" <?php selected( $enabled, 1 ); ?>><?php esc_html_e( 'Enabled',  'bp-xprofile-field-read-only' ); ?></option>
+						<option value="0" <?php selected( $enabled, 0 ); ?>><?php esc_html_e( 'Disabled',   'bp-xprofile-field-read-only' ); ?></option>
+						<option value="1" <?php selected( $enabled, 1 ); ?>><?php esc_html_e( 'Enabled',    'bp-xprofile-field-read-only' ); ?></option>
+						<option value="2" <?php selected( $enabled, 2 ); ?>><?php esc_html_e( 'Admin-only', 'bp-xprofile-field-read-only' ); ?></option>
 					</select>
 				</p>
 			</div>
@@ -263,11 +266,14 @@ final class BP_XProfile_Field_Read_Only {
 	public function field_name_legend( $field ) {
 
 		// Bail when field is not marked read-only
-		if ( ! $this->is_field_read_only( $field->id ) )
-			return;
+		if ( $this->is_field_read_only( $field->id ) ) {
+			$label = $this->is_field_read_only( $field->id, true )
+				? esc_html__( '(Admin Only)', 'bp-xprofile-field-read-only' )
+				: esc_html__( '(Read Only)',  'bp-xprofile-field-read-only' );
 
-		// Display read only legend
-		echo '<span class="readonly">' . __( '(Read Only)', 'bp-xprofile-field-read-only' ) . '</span>';
+			// Display read only legend
+			echo '<span class="readonly">' . $label . '</span>';
+		}
 	}
 
 	/** Filters *********************************************************/
@@ -290,8 +296,8 @@ final class BP_XProfile_Field_Read_Only {
 		// Are we editing fields? Front or in admin
 		$editing = bp_is_user_profile_edit() || ( is_admin() && isset( $_GET['page'] ) && 'bp-profile-edit' === $_GET['page'] );
 
-		// Bail when user is admin or we're not editing fields
-		if ( current_user_can( 'bp_moderate' ) || ! $editing )
+		// Bail when user is admin
+		if ( current_user_can( 'bp_moderate' ) )
 			return $groups;
 
 		// Walk profile groups
@@ -305,7 +311,7 @@ final class BP_XProfile_Field_Read_Only {
 			foreach ( $group->fields as $fk => $field ) {
 
 				// Remove read-only field
-				if ( $this->is_field_read_only( $field->id ) ) {
+				if ( $this->is_field_read_only( $field->id, ! $editing ) ) {
 					unset( $groups[ $gk ]->fields[ $fk ] );
 				}
 			}
