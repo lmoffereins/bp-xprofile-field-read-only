@@ -307,11 +307,11 @@ final class BP_XProfile_Field_Read_Only {
 				// Remove read-only field
 				if ( $this->is_field_read_only( $field->id ) ) {
 					unset( $groups[ $gk ]->fields[ $fk ] );
-
-					// Reset numeric keys
-					$groups[ $gk ]->fields = array_values( $groups[ $gk ]->fields );
 				}
 			}
+
+			// Reset numeric keys
+			$groups[ $gk ]->fields = array_values( $groups[ $gk ]->fields );
 
 			// Remove empty group
 			if ( isset( $args['hide_empty_groups'] ) && $args['hide_empty_groups'] && empty( $group->fields ) ) {
