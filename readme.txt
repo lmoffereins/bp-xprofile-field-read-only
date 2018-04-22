@@ -21,6 +21,10 @@ Activate BP XProfile Field Read Only in the "Plugins" admin panel using the "Act
 
 == Changelog ==
 
+= 1.2.1 =
+* Added plugin meta caps
+* Updated translation files
+
 = 1.2.0 =
 * Added option to make a field fully admin-only by removing it from both the field's editing and viewing context
 
