@@ -1,12 +1,12 @@
 # BP XProfile Field Read Only #
 
-Make BuddyPress XProfile fields uneditable for non-admins.
+Make BuddyPress XProfile fields uneditable or hidden for non-admins.
 
 ## Description ##
 
 > This WordPress plugin requires at least [WordPress](https://wordpress.org) 4.0 and [BuddyPress](https://buddypress.org) 2.2.
 
-Use this plugin when you want to make certain profile fields uneditable for your members: the fields are removed from the edit context. Only users who have administrator rights can edit these profile fields.
+Use this plugin when you want to make certain profile fields uneditable for your members: the fields are removed from the edit context. Or remove the profile field fully for non-administrator members. Only users who have administrator rights can edit these profile fields.
 
 ## Installation ##
 
